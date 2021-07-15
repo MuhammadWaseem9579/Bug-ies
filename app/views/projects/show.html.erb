@@ -1,0 +1,12 @@
+<h1>Project Details</h1>
+<h2><%= @project.name.capitalize %></h2>
+<p><%= @project.name %></p>
+<% if manager? %>
+<%= link_to "Edit Project" , edit_project_path(@project), class: "btn btn-primary btn-lg" %>
+<%= link_to "Delete Project" , project_path(@project), method: :delete , data: {confirm: "Are you sure?"}, class: "btn btn-primary btn-lg" %>
+<% end %>
+<h2>Empolyees working on it</h2>
+
+<% @project.users.each do |u| %>
+<h4><%= u.name.capitalize %></h4><small><%= u.user_type.capitalize %></small>
+<% end %>

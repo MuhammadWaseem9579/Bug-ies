@@ -1,0 +1,11 @@
+<h1>
+	Projects
+</h1>
+
+<% @projects.each do |p| %>
+
+<div class="m-2 p-5 bg-dark text-white">
+	<h3><%= link_to "#{p.name}", project_path(p) %></h3>
+</div>
+
+<% end %>

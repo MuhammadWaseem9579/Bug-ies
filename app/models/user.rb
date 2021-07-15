@@ -6,5 +6,11 @@ class User < ApplicationRecord
 
   validates :name, presence: true
   validates :user_type, presence: true
-  
+
+  has_many :projects , dependent: :destroy
+  has_many :bugs, dependent: :destroy
+
+  has_many :users_projects
+  has_many :projects, through: :users_projects , dependent: :destroy
+
 end

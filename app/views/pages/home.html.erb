@@ -1,2 +1,19 @@
-<h1>Pages#home</h1>
-<p>Find me in app/views/pages/home.html.erb</p>
+<h1>Pages Home</h1>
+<br>
+	
+	<% if current_user.user_type == "manager" %>
+		<% projects = Project.where(user_id: current_user.id) %>
+	<% else %>
+		<% projects = current_user.projects %>
+	<% end %>
+
+	<% if projects.count != 0 %>
+		<h2>Your Projects</h2>
+		<% projects.each do |p| %>
+		<div>
+			<%= p.name %>
+		</div>
+		<% end %>
+	<% else %>
+		<h3>You have no project yet</h3>
+	<% end %>
