@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
 	before_action :configure_permitted_parameters, if: :devise_controller?
-	helper_method :manager?
+	helper_method :manager?, :qa? , :can_create_bug?
 	def configure_permitted_parameters
 		devise_parameter_sanitizer.permit(:sign_up, keys: [:name,:user_type])
 	    # devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(:name, :email, :user_type ,:password, :password_confirmation) }
@@ -9,7 +9,15 @@ class ApplicationController < ActionController::Base
 	end
 
 	def manager?
-			!!user_signed_in? && current_user.user_type == "manager"
+		!!user_signed_in? && current_user.user_type == "manager"
+	end
+
+	def qa?
+		!!user_signed_in? && current_user.user_type == "qa"
+	end
+
+	def can_create_bug?
+		!! manager? || qa?
 	end
 
 end

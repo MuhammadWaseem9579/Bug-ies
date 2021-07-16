@@ -11,15 +11,21 @@ class ProjectsController < ApplicationController
 	end
 
 	def create
+		debugger
 		if manager?
 			@project = Project.new(project_params)
 			@project.user_id = current_user.id
-			@project.user_ids = params[:users1].map(&:to_i) + params[:users2].map(&:to_i)
-			if @project.save
-				redirect_to project_path(@project)
-			else
-				flash[:danger] = "Failed"
+
+			if !params[:user_ids].present?
+				flash[:danger] = "Please Select Developer and Qa"
 				render 'new'
+			else
+				if @project.save
+					redirect_to project_path(@project)
+				else
+					flash[:danger] = "Failed"
+					render 'new'
+				end
 			end
 		else
 			flash[:danger] = "Only manager can create project"
@@ -64,12 +70,13 @@ class ProjectsController < ApplicationController
 		if manager?
 			if Project.find(params[:id]).destroy
 				flash[:success] = "Deleted Sucessfully"
+				redirect_to projects_path
 			else
 				flash[:danger] = "Something went Wrong. Try Later!"
 			end
 		else
 			flash[:danger] = "Only manager can delete project"
-			redirect_to project_path(@project)
+			redirect_to projects_path
 		end
 	end
 

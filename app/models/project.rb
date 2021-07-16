@@ -3,7 +3,10 @@ class Project < ApplicationRecord
   	validates :description, presence: true
   	validates :user_id, presence: true
 
-  	has_many :bugs , dependent: :destroy
+  	has_many :my_bugs , dependent: :destroy
+
+  	belongs_to :user
   	has_many :users_projects
-  	has_many :users, through: :users_projects, dependent: :destroy
+  	has_many :users, through: :users_projects
+  	
 end

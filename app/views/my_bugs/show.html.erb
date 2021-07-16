@@ -1,0 +1,35 @@
+<div class="d-flex flex-column align-items-center">
+	<br>
+	<h1>Details</h1>
+	<br>
+	<div class="col-md-8">
+	    <div class="h-100 p-5 text-white bg-dark rounded-3">
+	      <h2>Title : <%= @bug.title.capitalize %></h2>
+	      <hr>
+	      <p>Description : <%= @bug.description.capitalize %> </p>
+	      <br>
+	      <div class="d-flex justify-content-between">
+	      	<span>Type : <%= @bug.bug_type.capitalize %></span>
+	      	<span>Status : <%= @bug.status.capitalize %> </span>
+	      	<small>Deadline : <%= @bug.deadline.strftime("%d-%m-%Y") %> </small>
+	      </div>
+	      <hr>
+	      <div class="d-flex justify-content-between">
+	      	<small>Created by : <%= @bug.user.name.capitalize %></small>
+	      	<% if @bug.assigned_to.present? %>
+		      		<small>Assigned to : <%= User.find(@bug.assigned_to).name.capitalize %> </small>
+		      	<% end %>
+	      </div>
+	      <hr>
+	      <div class="d-flex justify-content-center">
+	      	<%= link_to "Return to Bugs", my_bugs_path , class: "btn btn-primary mx-3" %>
+	      	
+	      	<%= link_to "Project Details", project_path(Project.find(@bug.project_id)) , class: "btn btn-warning mx-3" %>
+	      	<% if @bug.user == current_user %>
+	      	<%= link_to "Edit Bug", edit_my_bug_path(@bug) , class: "btn btn-warning mx-3" %>
+	      	<%= link_to "Delete Bug", my_bug_path(@bug), method: :delete , data: {confirm: "Are you sure?"} , class: "btn btn-danger mx-3" %>
+	      	<% end %>
+	      	</div>
+	    </div>
+	</div>
+</div>

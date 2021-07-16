@@ -10,12 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_14_104454) do
+ActiveRecord::Schema.define(version: 2021_07_15_144425) do
 
-  create_table "bugs", force: :cascade do |t|
+  create_table "my_bugs", force: :cascade do |t|
     t.string "title"
     t.datetime "deadline"
-    t.string "type"
+    t.string "bug_type"
     t.string "status"
     t.string "image"
     t.text "description"
@@ -23,6 +23,7 @@ ActiveRecord::Schema.define(version: 2021_07_14_104454) do
     t.integer "project_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "assigned_to"
   end
 
   create_table "projects", force: :cascade do |t|
@@ -31,7 +32,6 @@ ActiveRecord::Schema.define(version: 2021_07_14_104454) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "user_id"
-    
   end
 
   create_table "users", force: :cascade do |t|
