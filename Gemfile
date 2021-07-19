@@ -24,6 +24,10 @@ gem 'jbuilder', '~> 2.7'
 
 
 gem 'devise', '~> 4.8'
+gem 'carrierwave', '~> 2.0'
+gem 'cancancan'
+gem 'jquery-rails'
+
 
 
 # Use Active Storage variant

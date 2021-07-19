@@ -1,38 +1,44 @@
 class MyBugsController < ApplicationController
 
 	def index
-		if user_signed_in?
+		flash[:danger] = "Bugs have no existance without project"
+		redirect_to projects_path
+		# if can? :read, MyBug
+		# 	if manager? || qa?
+		# 		@bugs = MyBug.where(user_id: current_user.id)
+		# 	else
+		# 		# @bugs = current_user.my_bugs
+		# 		@bugs = MyBug.where(assigned_to: current_user.id )
+		# 	end
+		# else
 
-			if manager? || qa?
-				@bugs = MyBug.where(user_id: current_user.id)
-			else
-				# @bugs = current_user.my_bugs
-				@bugs = MyBug.where(assigned_to: current_user.id )
-			end
-
-		else
-
-			flash[:danger] = "Please Login First..."
-			redirect_to root_path
-
-		end
+		# 		flash[:danger] = "Please login to use our app"
+		# 		redirect_to request.referer
+		# end
 	end
 
 	def new
-		if can_create_bug?
+		if can? :create, MyBug
 			@project_id = params[:project_id]
 			if @project_id.present?
-				@bug = MyBug.new
+				if can_create_bug(params[:project_id])
+					@bug = MyBug.new
+				else
+					flash[:danger] = "Access Denied..."
+					redirect_to root_path
+				end
 			else
+				flash[:danger] = "Can't create bug without a project"
 				redirect_to projects_path
 			end
 		else
 			flash[:danger] = "Only Manager or Qa can create bug"
+			redirect_to root_path
 		end
 	end
 
 	def create
-		if can_create_bug?
+		if can? :create, MyBug
 			@bug = MyBug.new(bug_params)
 			# @bug.bug_type = params[:my_bug][:bug_type]
 
@@ -48,11 +54,24 @@ class MyBugsController < ApplicationController
 	end
 
 	def show
-		@bug = MyBug.find(params[:id])
+		if can? :read, MyBug
+			@bug = MyBug.find(params[:id])
+			if !can_update_bug(@bug.project_id)
+				flash[:dnager] = "Access Denied..."
+				redirect_to root_path
+			end
+		else
+			flash[:danger] = "Access Denied..."
+			redirect_to request.referer
+		end
 	end
 
 	def edit
-		@bug = MyBug.find(params[:id])
+		if !can_update_bug(@bug.project.id)
+			@bug = MyBug.find(params[:id])
+			flash[:danger] = "Only Project Related Person can Make changes"
+			redirect_to root_path
+		end
 	end
 
 	def update
@@ -65,26 +84,34 @@ class MyBugsController < ApplicationController
 		redirect_to my_bug_path(@bug)
 	end
 
-	def destroy
+	def bug_status
 		@bug = MyBug.find(params[:id])
-		if @bug && @bug.user == current_user
-			if @bug.destroy
-				flash[:success] = "Deleted Sucessfully..."
-				redirect_to my_bugs_path
+		@bug.update(status: params[:status])
+		render json: {success: "ok"}
+	end
+
+	def destroy
+		if can_update_bug(@bug.project.id)
+			if can? :destroy, MyBug
+				@bug = MyBug.find(params[:id])
+				if @bug.destroy
+					flash[:success] = "Deleted Sucessfully..."
+					redirect_to my_bugs_path
+				else
+					flash[:danger] = "Something went wrong..."
+					render 'my_bug'
+				end
 			else
-				flash[:danger] = "Something went wrong..."
+				flash[:danger] = "Only Creater of bug can delete his bug..."
 				render 'my_bug'
 			end
-		else
-			flash[:danger] = "Only Creater of bug can delete his bug..."
-			render 'my_bug'
 		end
 	end
 
 	private
 
-		def bug_params
-			params.require(:my_bug).permit(:title,:description,:assigned_to,:status,:bug_type,:project_id,:user_id,:status,:deadline)
-		end
+	def bug_params
+		params.require(:my_bug).permit(:title,:description,:assigned_to,:status,:bug_type,:project_id,:user_id,:status,:deadline,:image)
+	end
 
 end

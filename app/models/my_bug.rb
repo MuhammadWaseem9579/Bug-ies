@@ -7,6 +7,8 @@ class MyBug < ApplicationRecord
   	validates :user_id, presence: true
   	validates :project_id, presence: true
   	validates :deadline, presence: true
+
+  	mount_uploader :image, AvatarUploader
   	
   	belongs_to :user
   	belongs_to :project

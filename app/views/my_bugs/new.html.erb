@@ -31,7 +31,6 @@
       <%= f.collection_select :assigned_to, result, :id , :name , {} , {multiple: false, required: true , class: 'form-control form-control my-1' } %>
     </div>
 
-
     <div class="field">
       <%= f.hidden_field :user_id, value: current_user.id %>
     </div>
@@ -44,6 +43,10 @@
     <div class="form-group">
       <%= f.label :deadline %><br />
       <%= f.date_select :deadline, start_year: Time.now.year, end_year: Time.now.year + 10 , :html=>{:class => "form-control form-control my-1"} %>
+    </div>
+
+    <div class="actions">
+      <%= f.file_field :image, accept: 'image/png,image/gif' , class:"my-1 btn btn-primary col-12"%>
     </div>
 
     <div class="actions">

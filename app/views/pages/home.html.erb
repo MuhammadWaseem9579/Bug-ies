@@ -1,6 +1,9 @@
 <br>
 	
 	<% if current_user.user_type == "manager" %>
+	<div class="d-flex justify-content-end col-md-10">
+		<%= link_to "Create New Project", new_project_path , class: "btn btn-primary btn-sm" %>
+	</div>
 		<% projects = Project.where(user_id: current_user.id) %>
 	<% else %>
 		<% projects = current_user.projects %>

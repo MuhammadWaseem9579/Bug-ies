@@ -13,4 +13,16 @@ class User < ApplicationRecord
   has_many :users_projects
   has_many :projects, through: :users_projects 
 
+  def developer?
+    return user_type.eql?('developer')
+  end
+  
+  def manager?
+    return user_type.eql?('manager')
+  end
+
+  def qa?
+    return user_type.eql?('qa')
+  end
+
 end

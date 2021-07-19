@@ -7,7 +7,10 @@ Rails.application.routes.draw do
 
   resources :projects
 
-  resources :my_bugs
-
+  resources :my_bugs do
+    member do
+     post :bug_status
+    end
+  end
 
 end
